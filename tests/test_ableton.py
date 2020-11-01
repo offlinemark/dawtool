@@ -8,6 +8,8 @@ These long arrays of results are created by calling
 
 in the test, running it, copy-pasting what pytest prints to stdout
 into the file, and removing the print.
+
+TODO: use pytest approx() for all these floating point comparisons!
 """
 
 from dawtool import extract_markers, format_time, load_project
