@@ -53,7 +53,7 @@ def main():
 
 
 
-ap = ArgumentParser()
+ap = ArgumentParser(prog='dawtool')
 ap.add_argument('file')
 ap.add_argument('-v', action='store_true')
 ap.add_argument('-d', '--debug', action='store_true')
