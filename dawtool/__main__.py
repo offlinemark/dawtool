@@ -46,7 +46,8 @@ def main():
 
         # client chooses the presentation, also chooses to throw away precision
         for m in markers:
-            print(format_time(int(m.time), hours_fmt), m.text)
+            # print(format_time(int(m.time), hours_fmt), m.text)
+            print(format_time(m.time,hours_fmt, precise=1), m.text)
 
     if args.emit:
         print(proj.emit(), end='')
