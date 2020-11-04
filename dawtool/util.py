@@ -19,8 +19,8 @@ def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pa
     hours, mins = divmod(int(mins), 60)
 
     if precise:
-        fmt_str_mins = '{:02}:{:02.3f}'
-        fmt_str_hours = '{:02}:{:02}:{:02.3f}'
+        fmt_str_mins = '{:02}:{:06.3f}'
+        fmt_str_hours = '{:02}:{:02}:{:06.3f}'
     else:
         fmt_str_mins = '{:02}:{:02}'
         if hours_pad:
