@@ -124,18 +124,18 @@ class Project:
 
         print('>>> End Timeline Dump <<<')
         print('\n\n\n')
-        print('>>> Automation Events Dump <<<')
+        # print('>>> Automation Events Dump <<<')
 
-        for i, ev in enumerate(self.tempo_automation_events):
-            print(format_time(gettime(ev), precise=True), ev)
-            try:
-                dist = self.tempo_automation_events[i+1].real_time - ev.real_time
-                if dist:
-                    print('\t +', dist)
-            except IndexError:
-                break
+        # for i, ev in enumerate(self.tempo_automation_events):
+        #     print(format_time(gettime(ev), precise=True), ev)
+        #     try:
+        #         dist = self.tempo_automation_events[i+1].real_time - ev.real_time
+        #         if dist:
+        #             print('\t +', dist)
+        #     except IndexError:
+        #         break
 
-        print('>>> End Automation Events Dump <<<')
+        # print('>>> End Automation Events Dump <<<')
 
     def _calc_tempo_automation_event_real_times(self):
         """
