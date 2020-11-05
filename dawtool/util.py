@@ -1,6 +1,5 @@
 from decimal import Decimal, ROUND_UP
 
-import scipy.integrate as integrate
 
 def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pad=True):
     """
@@ -68,6 +67,9 @@ def calc_time_elapsed_theoretical(first_bpm, second_bpm, domain):
 
     Construct the seconds per beat function to be integrated over the domain.
     """
+
+    # scipy is slow to import, so only do so if we need to.
+    import scipy.integrate as integrate
 
     # vertical line - return 0
     if domain == 0:
