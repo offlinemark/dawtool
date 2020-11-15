@@ -12,8 +12,8 @@ def test_format_time():
     assert format_time(60) == '01:00'
     assert format_time(60, True) == '00:01:00'
 
-    assert format_time(60, precise=True) == '01:0.000'
-    assert format_time(60*60, precise=True) == '01:00:0.000'
+    assert format_time(60, precise=True) == '01:00.000'
+    assert format_time(60*60, precise=True) == '01:00:00.000'
 
 def test_hours_pad():
     assert format_time(60*60, hours_fmt=True, hours_pad=False) == '1:00:00'
@@ -30,7 +30,7 @@ def test_hours_pad():
 def test_precise():
     assert format_time(59.1, precise=True) == '00:59.100'
     assert format_time(59.1) == '00:59'
-    assert format_time(60.1, precise=True) == '01:0.100'
+    assert format_time(60.1, precise=True) == '01:00.100'
     assert format_time(60.1) == '01:00'
 
 def test_format_time_sep():
@@ -46,6 +46,6 @@ def test_format_time_sep():
     assert format_time(60, sep=sep) == '01〰00'
     assert format_time(60, True, sep=sep) == '00〰01〰00'
 
-    assert format_time(60, precise=True, sep=sep) == '01〰0.000'
-    assert format_time(60*60, precise=True, sep=sep) == '01〰00〰0.000'
+    assert format_time(60, precise=True, sep=sep) == '01〰00.000'
+    assert format_time(60*60, precise=True, sep=sep) == '01〰00〰00.000'
 
