@@ -1,13 +1,16 @@
 # dawtool
 
+![](https://github.com/offlinemark/dawtool/workflows/CI/badge.svg)
+
 dawtool parses and extracts data from Digital Audio Workstation (DAW) file
 formats.
 
-Its primary feature is high accuracy **time marker extraction**.
+It provides a high accuracy implementation of **time marker extraction**,
+including support for projects with tempo automation.
 
 Supported formats:
 - Ableton Live set (.als) [v8-10]
-- FL Studio project (.flp) [v10, 11, 20]
+- FL Studio project (.flp) [v10-11, 20]
 - Cue sheet (.cue)
 
 ## About
@@ -23,6 +26,9 @@ manipulation.
 ![](https://timestamps.me/static/img/ableton%20screenshot.png)
 
 ## Usage
+
+> Time markers are the only officially supported output, however much more
+> of the formats are available through internal APIs.
 
 Python API:
 
@@ -59,6 +65,9 @@ pip install dawtool
 dawtool's core functionality is stable, although the APIs are not.
 A [hosted version](https://timestamps.me) has processed 600+ project files
 since March 2020.
+
+Tempo automation is currently supported for linear automation only. Nonlinear
+automation may cause inaccuracies.
 
 ## Credits
 
