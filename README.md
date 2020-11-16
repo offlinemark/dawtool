@@ -66,7 +66,7 @@ dawtool's core functionality is stable, although the APIs are not.
 A [hosted version](https://timestamps.me) has processed 600+ project files
 since March 2020.
 
-Tempo automation is currently supported for linear automation only. Nonlinear
+Tempo automation is supported for linear automation only. Nonlinear
 automation may cause inaccuracies.
 
 ## Credits
