@@ -55,6 +55,8 @@ $ dawtool -m my-dj-mix.als
 
 ## Installation
 
+dawtool requires Python 3.7 or greater.
+
 ```
 git clone https://github.com/offlinemark/dawtool
 pip install dawtool
