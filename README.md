@@ -6,8 +6,8 @@ formats.
 Its primary feature is high accuracy **time marker extraction**.
 
 Supported formats:
-- Ableton Live set (.als)
-- FL Studio project (.flp)
+- Ableton Live set (.als) [v8-10]
+- FL Studio project (.flp) [v10, 11, 20]
 - Cue sheet (.cue)
 
 ## About
