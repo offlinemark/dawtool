@@ -48,12 +48,12 @@ def main():
 
 ap = ArgumentParser(prog='dawtool')
 ap.add_argument('file')
-ap.add_argument('-d', '--debug', action='store_true')
-ap.add_argument('-e', '--emit', help='re-emit to stdout. only for cue files', action='store_true')
-ap.add_argument('-m', '--markers', action='store_true')
-ap.add_argument('-t', '--theoretical', help='use theoretical time calculations', action='store_true')
 ap.add_argument('-v', '--verbose', help='Enable verbose logging', action='store_true')
+ap.add_argument('-d', '--debug', help='Enable debug logging', action='store_true')
+ap.add_argument('-e', '--emit', help='Re-emit to stdout. Only for cue files', action='store_true')
+ap.add_argument('-m', '--markers', help='Output time markers', action='store_true')
 ap.add_argument('-x', '--hours', help='Output time markers in hours', action='store_true')
+ap.add_argument('-t', '--theoretical', help='Use theoretical time calculations', action='store_true')
 args = ap.parse_args()
 
 if args.debug:
