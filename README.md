@@ -27,8 +27,9 @@ manipulation.
 
 ## Usage
 
-> Time markers are the only officially supported output, however much more
-> of the formats are available through internal APIs.
+> Time markers are the only officially supported output. However much more
+> of the formats are available through internal APIs, such as tempo automation
+> data.
 
 Python API:
 
