@@ -38,16 +38,8 @@ def main():
             print('Could not find markers in', fname)
             return
 
-        # print(markers)
-
-        # client chooses to make the formatting consistent if it detects the
-        # markers go an hour or more
-        hours_fmt = markers[-1].time >= SEC_PER_HOUR
-
-        # client chooses the presentation, also chooses to throw away precision
         for m in markers:
-            # print(format_time(int(m.time), hours_fmt), m.text)
-            print(format_time(m.time,hours_fmt, precise=1), m.text)
+            print(format_time(m.time, args.hours, precise=1), m.text)
 
     if args.emit:
         print(proj.emit(), end='')
@@ -61,6 +53,7 @@ ap.add_argument('-e', '--emit', help='re-emit to stdout. only for cue files', ac
 ap.add_argument('-m', '--markers', action='store_true')
 ap.add_argument('-t', '--theoretical', help='use theoretical time calculations', action='store_true')
 ap.add_argument('-v', '--verbose', help='Enable verbose logging', action='store_true')
+ap.add_argument('-x', '--hours', help='Output time markers in hours', action='store_true')
 args = ap.parse_args()
 
 if args.debug:
