@@ -29,7 +29,7 @@ def main():
         print('Could not extract markers from', fname, ':', e)
         raise
 
-    if args.v:
+    if args.verbose:
         proj.dump()
 
     if args.markers:
@@ -56,11 +56,11 @@ def main():
 
 ap = ArgumentParser(prog='dawtool')
 ap.add_argument('file')
-ap.add_argument('-v', action='store_true')
 ap.add_argument('-d', '--debug', action='store_true')
 ap.add_argument('-e', '--emit', help='re-emit to stdout. only for cue files', action='store_true')
 ap.add_argument('-m', '--markers', action='store_true')
 ap.add_argument('-t', '--theoretical', help='use theoretical time calculations', action='store_true')
+ap.add_argument('-v', '--verbose', help='Enable verbose logging', action='store_true')
 args = ap.parse_args()
 
 if args.debug:
