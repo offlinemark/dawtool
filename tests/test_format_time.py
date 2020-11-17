@@ -44,20 +44,3 @@ def test_precise():
     assert format_time(59.1) == '00:59'
     assert format_time(60.1, precise=True) == '01:00.100'
     assert format_time(60.1) == '01:00'
-
-def test_format_time_sep():
-    sep = '〰'
-    assert format_time(60*60, sep=sep) == '01〰00〰00'
-
-    assert format_time(59*60, sep=sep) == '59〰00'
-
-    assert format_time(59, sep=sep) == '00〰59'
-
-    assert format_time(59, True, sep=sep) == '00〰00〰59'
-
-    assert format_time(60, sep=sep) == '01〰00'
-    assert format_time(60, True, sep=sep) == '00〰01〰00'
-
-    assert format_time(60, precise=True, sep=sep) == '01〰00.000'
-    assert format_time(60*60, precise=True, sep=sep) == '01〰00〰00.000'
-

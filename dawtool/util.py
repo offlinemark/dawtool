@@ -1,7 +1,7 @@
 from decimal import Decimal, ROUND_UP
 
 
-def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pad=True):
+def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
     """
     Convert total_seconds float into a string of the form "02:33:44". total_seconds amounts
     greater than a day will still use hours notation.
@@ -40,7 +40,7 @@ def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pa
     else:
         ret = fmt_str_mins.format(total_mins, secs)
 
-    return ret.replace(':', sep)
+    return ret
 
 #####
 
