@@ -1,6 +1,3 @@
-from decimal import Decimal, ROUND_UP
-
-
 def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
     """
     Convert total_seconds float into a string of the form "02:33:44". total_seconds amounts
