@@ -40,14 +40,14 @@ def test_als120():
 
     assert [m.time for m in markers] == [0.0, 200.0000133333342, 216.00001440000096, 324.00002160000145, 464.0000309333354, 604.0000402666693, 716.0000477333365, 840.0000560000037, 1000.000066666671, 1189.053707412938, 1392.000092800006, 1512.0001008000067, 1656.0001104000073, 1792.0001194666745, 3904.0002602666837]
     assert [m.text for m in markers] == ['mirvs - his track你好', 'comfort - other track', 'comfort - yo', 'sh1n - track', 'stm - ggr', 'heart - ID', 'ID - ID', '', '', 'track - this track', 'another track', 'another track', 'another track', 'tids track', 'sd']
-    assert [format_time(m.time) for m in markers] == ['00:00', '03:20', '03:36', '05:24', '07:44', '10:04', '11:56', '14:00', '16:40', '19:49', '23:12', '25:12', '27:36', '29:52', '01:05:04']
+    assert [format_time(m.time) for m in markers] == ['00:00', '03:20', '03:36', '05:24', '07:44', '10:04', '11:56', '14:00', '16:40', '19:49', '23:12', '25:12', '27:36', '29:52', '65:04']
 
 def test_als140():
     fname = f'{TESTS_DIR_ALS}/example-140.als'
     with open(fname, 'rb') as f:
         markers = extract_markers(fname, f, theoretical=True)
 
-    times = ['00:00', '02:51', '03:05', '04:37', '06:37', '01:00:20']
+    times = ['00:00', '02:51', '03:05', '04:37', '06:37', '60:20']
     assert [format_time(m.time) for m in markers] == times
 
     assert [m.time for m in markers] == [0.0, 171.42857142857142, 185.14285714285714, 277.7142857142857, 397.71428571428567, 3620.5714285714284]

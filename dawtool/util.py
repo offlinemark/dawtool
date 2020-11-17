@@ -1,7 +1,4 @@
-from decimal import Decimal, ROUND_UP
-
-
-def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pad=True):
+def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
     """
     Convert total_seconds float into a string of the form "02:33:44". total_seconds amounts
     greater than a day will still use hours notation.
@@ -9,17 +6,20 @@ def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pa
     Output is either in minutes "00:00" formatting or hours "00:00:00" formatting.
     Not possible to only produce seconds or days+, etc.
 
-    hours_fmt: Force output to have an hours fields even if the total_seconds
-      is less than an hour.
+    total_seconds: float
+    hours_fmt: True=Output always has hours field. False=Output never has hours field.
+    precise: Use floating point value for seconds.
+    hours_pad: Pad hours field to 2 digits.
     """
 
-    total_sec = total_seconds if precise else int(total_seconds)
-    mins, secs = divmod(total_sec, 60)
-    hours, mins = divmod(int(mins), 60)
-
     if precise:
-        fmt_str_mins = '{:02}:{:06.3f}'
-        fmt_str_hours = '{:02}:{:02}:{:06.3f}'
+        # .0f is to suppress float output if precise=True.
+        # if precise=True, the .format() calls below will be passed floats
+        # from divmod.
+        # :02.0f = pad to 2 digits, no decimal places.
+        # :06.3f = pad to 6 digits total, three decimal places.
+        fmt_str_mins = '{:02.0f}:{:06.3f}'
+        fmt_str_hours = '{:02.0f}:{:02.0f}:{:06.3f}'
     else:
         fmt_str_mins = '{:02}:{:02}'
         if hours_pad:
@@ -27,13 +27,17 @@ def format_time(total_seconds, hours_fmt=False, precise=False, sep=':', hours_pa
         else:
             fmt_str_hours = '{}:{:02}:{:02}'
 
-    ret = ''
-    if not hours and not hours_fmt:
-        ret = fmt_str_mins.format(mins, secs)
-    else:
-        ret = fmt_str_hours.format(hours, mins, secs)
+    total_sec = total_seconds if precise else int(total_seconds)
+    total_mins, secs = divmod(total_sec, 60)
 
-    return ret.replace(':', sep)
+    ret = ''
+    if hours_fmt:
+        hours, mins = divmod(int(total_mins), 60)
+        ret = fmt_str_hours.format(hours, mins, secs)
+    else:
+        ret = fmt_str_mins.format(total_mins, secs)
+
+    return ret
 
 #####
 
