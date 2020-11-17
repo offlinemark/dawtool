@@ -39,7 +39,7 @@ def main():
             return
 
         for m in markers:
-            print(format_time(m.time, args.hours, precise=1), m.text)
+            print(format_time(m.time, args.hours, precise=True), m.text)
 
     if args.emit:
         print(proj.emit(), end='')
