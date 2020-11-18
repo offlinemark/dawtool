@@ -66,7 +66,7 @@ pip install ./dawtool
 ## Status
 
 dawtool's core functionality is stable, although the APIs are not.
-A [hosted version](https://timestamps.me) has processed 600+ project files
+A [hosted version](https://timestamps.me) has processed 700+ project files
 since March 2020.
 
 Tempo automation is supported for linear automation only. Nonlinear
