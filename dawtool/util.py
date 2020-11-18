@@ -7,7 +7,7 @@ def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
     Not possible to only produce seconds or days+, etc.
 
     total_seconds: float
-    hours_fmt: True=Output always has hours field. False=Output never has hours field.
+    hours_fmt: True = Force hours output. False = Force minutes output.
     precise: Use floating point value for seconds.
     hours_pad: Pad hours field to 2 digits.
     """
@@ -17,7 +17,7 @@ def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
         # if precise=True, the .format() calls below will be passed floats
         # from divmod.
         # :02.0f = pad to 2 digits, no decimal places.
-        # :06.3f = pad to 6 digits total, three decimal places.
+        # :06.3f = pad to 2 digits, three decimal places (6 chars total)
         fmt_str_mins = '{:02.0f}:{:06.3f}'
         fmt_str_hours = '{:02.0f}:{:02.0f}:{:06.3f}'
     else:
