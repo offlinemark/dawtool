@@ -52,6 +52,12 @@ Command line tool:
 
 ```
 $ dawtool -m my-dj-mix.als
+00:00.000 nciku - peaceofmind
+02:15.115 comfort - a n g e l _ w i n g s
+05:18.654 rose bride rings - femme fatale
+06:52.654 ranov - butterfly
+08:47.077 scalade - tempura VIP
+10:57.423 mirvs - defrosted
 ```
 
 ## Installation
