@@ -26,4 +26,4 @@ jobs:
         pytest tests
     - name: Test cli
       run: |
-        dawtool
+        dawtool -h
