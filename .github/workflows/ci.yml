@@ -22,8 +22,8 @@ jobs:
         pip install .
     - name: Test with pytest
       run: |
-        # pip install pytest
-        # pytest tests
+        pip install pytest
+        pytest tests
     - name: Test cli
       run: |
         dawtool
