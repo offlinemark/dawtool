@@ -18,8 +18,8 @@ def format_time(total_seconds, hours_fmt=False, precise=False, hours_pad=True):
         # from divmod.
         # :02.0f = pad to 2 digits, no decimal places.
         # :06.3f = pad to 2 digits, three decimal places (6 chars total)
-        fmt_str_mins = '{:02.0f}:{:08.5f}'
-        fmt_str_hours = '{:02.0f}:{:02.0f}:{:08.5f}'
+        fmt_str_mins = '{:02.0f}:{:06.3f}'
+        fmt_str_hours = '{:02.0f}:{:02.0f}:{:06.3f}'
     else:
         fmt_str_mins = '{:02}:{:02}'
         if hours_pad:
