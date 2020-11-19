@@ -73,9 +73,11 @@ pip install ./dawtool
 
 ## Status
 
-dawtool's core functionality is stable, although the APIs are not.
-A [hosted version](https://timestamps.me) has processed 700+ project files
-since March 2020.
+dawtool is production ready. A [hosted version](https://timestamps.me)
+has processed 700+ project files since March 2020.
+
+Both the API and CLI should be considered unstable and
+subject to change.
 
 Tempo automation is supported for linear automation only. Nonlinear
 automation may cause inaccuracies.
