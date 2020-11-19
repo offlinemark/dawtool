@@ -39,7 +39,7 @@ def main():
             return
 
         for m in markers:
-            print(format_time(m.time, args.hours, precise=True), m.text)
+            print(format_time(m.time, args.hours, precise=args.imprecise), m.text)
 
     if args.emit:
         print(proj.emit(), end='')
@@ -54,6 +54,7 @@ ap.add_argument('-e', '--emit', help='Re-emit to stdout. Only for cue files', ac
 ap.add_argument('-m', '--markers', help='Output time markers', action='store_true')
 ap.add_argument('-x', '--hours', help='Output time markers in hours', action='store_true')
 ap.add_argument('-t', '--theoretical', help='Use theoretical time calculations', action='store_true')
+ap.add_argument('-i', '--imprecise', help='Use imprecise formatting', action='store_false')
 args = ap.parse_args()
 
 if args.debug:
