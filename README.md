@@ -13,6 +13,8 @@ Supported formats:
 - FL Studio project (.flp) [v10-11, 20]
 - Cue sheet (.cue)
 
+> Just browsing? Here are a few [points of interest](https://gist.github.com/offlinemark/96ddd2c323ced8c70e2b24c1536b7b5f) in the codebase.
+
 ## About
 
 Time markers allow users to annotate the DAW timeline with text.  Certain use
