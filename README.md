@@ -88,7 +88,3 @@ dawtool's .flp parser is based on work from the
 [LMMS](https://github.com/LMMS/lmms),
 [PyDaw](https://github.com/andrewrk/PyDaw), and
 [FLParser](https://github.com/monadgroup/FLParser) projects.
-
-## License
-
-GPL v3
