@@ -1,6 +1,9 @@
 dawtool is licensed under the BSD 3-Clause license, except for
 `flstudio_core.py` which is licensed under the GPL v3.
 
+In practice, this requires dawtool users to comply with the GPL v3
+unless that file is removed or replaced.
+
 ===========================================================================
 
 BSD 3-Clause License
