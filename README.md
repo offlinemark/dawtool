@@ -33,7 +33,22 @@ manipulation.
 > of the formats are available through internal APIs, such as tempo automation
 > data.
 
-Python API:
+### Python API
+
+Simple API (Markers Only)
+
+```python
+import sys
+import dawtool
+
+filename = sys.argv[1]
+with open(filename, 'rb') as f:
+    markers = dawtool.extract_markers(filename, f)
+    for marker in markers:
+        print(marker.time, marker.text)
+```
+
+Advanced API (Markers & Other Data)
 
 ```python
 import sys
@@ -50,7 +65,7 @@ with open(filename, 'rb') as f:
         print(marker.time, marker.text)
 ```
 
-Command line tool:
+### Command line tool
 
 ```
 $ dawtool -m my-dj-mix.als
