@@ -6,7 +6,7 @@ dawtool parses and extracts data from Digital Audio Workstation (DAW) file
 formats.
 
 It provides a high accuracy implementation of **time marker extraction**,
-including support for projects with tempo automation.
+including support for projects with tempo automation. 
 
 Supported formats:
 - Ableton Live set (.als) [v8-10]
@@ -14,6 +14,8 @@ Supported formats:
 - Cue sheet (.cue)
 
 > Just browsing? Here are a few [points of interest](https://gist.github.com/offlinemark/96ddd2c323ced8c70e2b24c1536b7b5f) in the codebase.
+
+
 
 ## About
 
@@ -26,6 +28,11 @@ natively, showcasing how DAWs can be extended through project file
 manipulation.
 
 ![](https://timestamps.me/static/img/ableton%20screenshot.png)
+
+For more on how dawtool works, see the [talk](https://youtu.be/AtLlPQHaxzg)
+about it at the 2020 Audio Developer Conference.
+
+[![](http://img.youtube.com/vi/AtLlPQHaxzg/0.jpg)](http://www.youtube.com/watch?v=AtLlPQHaxzg "Reverse Engineering DAWs to Build Custom Workflow Tools - Mark Mossberg - ADC20")
 
 ## Usage
 
