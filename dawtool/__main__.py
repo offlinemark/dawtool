@@ -46,8 +46,12 @@ def main():
     if args.emit:
         print(proj.emit(), end='')
 
-    if args.midi:
-        emit_midi_tempo_map(args.midi, proj.tempo_automation_events, proj.TEMPO_QUANT)
+    if args.midi is not None:
+        if args.midi == b'STDOUT':
+            sys.stdout.buffer.write(proj.tempo_map)
+        else:
+            with open(args.midi, 'wb') as f:
+                f.write(proj.tempo_map)
 
 ap = ArgumentParser(prog='dawtool')
 ap.add_argument('file')
@@ -58,7 +62,7 @@ ap.add_argument('-m', '--markers', help='Output time markers', action='store_tru
 ap.add_argument('-x', '--hours', help='Output time markers in hours', action='store_true')
 ap.add_argument('-t', '--theoretical', help='Use theoretical time calculations', action='store_true')
 ap.add_argument('-i', '--imprecise', help='Use imprecise formatting', action='store_false')
-ap.add_argument('-z', '--midi', help='Emit midi tempo map')
+ap.add_argument('-z', '--midi', help='Emit midi tempo map', nargs='?', const=b'STDOUT')
 args = ap.parse_args()
 
 if args.debug:
