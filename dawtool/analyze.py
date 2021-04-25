@@ -1,3 +1,5 @@
+# TODO: rename this file. We are not exactly doing analysis here.
+
 import os.path
 
 from .project import load_project
