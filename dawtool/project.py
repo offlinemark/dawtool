@@ -75,9 +75,6 @@ class Project:
     def parse(self):
         raise NotImplementedError
 
-    def dump(self):
-        pass
-
     @property
     def has_tempo_automation(self):
         """
