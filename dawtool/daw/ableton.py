@@ -206,6 +206,7 @@ class AbletonProject(Project):
         self._parse_automation(self.contents)
 
         self._calc_markers()
+        self._compute_tempo_map()
 
     def _parse_version(self):
         start_idx = self.contents.find(b'<Ableton')

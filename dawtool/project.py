@@ -7,6 +7,7 @@ when doing time calculations.
 """
 
 from .marker import Marker
+from .tempomap import MidiTempoMap
 from .util import calc_time_elapsed_theoretical, spb, format_time
 from .util import linspace, power_of_two
 
@@ -81,6 +82,21 @@ class Project:
         Returns None if unknown.
         """
         return None 
+    
+    def _compute_tempo_map(self):
+        """
+        Called by subclasses that parse tempo automation points.
+
+        Unfortunately for now, this must be called after markers are
+        computed, as this relies on the prev_aligned_bpm field.
+
+        TODO: Decouple marker and prev_aligned_bpm calculations. Right now
+        prev_aligned_bpm is only computed as a side-effect of computing markers,
+        but we'd like to allow users to compute only the tempo map without
+        markers if they choose.
+        """
+        tempo_map = MidiTempoMap(self, self.tempo_automation_events, self.TEMPO_QUANT)
+        self.tempo_map = tempo_map.generate()
 
     #
     # tempo automation stuff

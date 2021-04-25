@@ -59,6 +59,7 @@ class FlStudioProject(FlStudioProjectCore):
         super().parse()
         self._compute_tempo_automations()
         self._calc_markers()
+        self._compute_tempo_map()
 
     @property
     def has_tempo_automation(self):
