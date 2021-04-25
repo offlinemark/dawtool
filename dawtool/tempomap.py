@@ -32,6 +32,7 @@ class MidiTempoMap:
             # that issue with live where it revert back to the original bpm with 1
             # point you need to click away.
             messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
+            # messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
             return messages
 
         for i, event in enumerate(tempo_automation_events):
