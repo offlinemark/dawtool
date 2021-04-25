@@ -24,7 +24,6 @@ class MidiTempoMap:
     def _render_map(self, tempo_automation_events, quant, ticks_per_beat):
         messages = []
         
-        # untested:
         if tempo_automation_events is None:
             # if no tempo auto, our map is a single point at the start. we may encounter
             # that issue with live where it revert back to the original bpm with 1
@@ -46,8 +45,6 @@ class MidiTempoMap:
 
             beats_elapsed = curr_beat - prev.beat
             time_elapsed_tick = beats_elapsed * ticks_per_beat
-            # print(curr_bpm, time_elapsed_tick)
-            # print('\t' , curr_bpm, int(time_elapsed_tick))
 
             if prev.bpm != curr_bpm and beats_elapsed:
                 # if we are on a slope
@@ -60,13 +57,11 @@ class MidiTempoMap:
                 bpm_increment = bpm_diff / num_segments 
 
                 bpm_accumulator = prev.bpm
-                # print(11, num_segments)
                 # FIXME: can't just cast to int - need to handle non aligned
                 for i in range(int(num_segments)):
                     # for every segment, we emit a horizontal line and a vertical
                     # line.
 
-                    # print(11, int(beat_increment*mid.ticks_per_beat))
                     messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(bpm_accumulator), time=int(beat_increment*ticks_per_beat)))
 
                     # currx = i*beat_increment +beat_increment 
