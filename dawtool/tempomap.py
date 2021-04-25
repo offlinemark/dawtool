@@ -78,23 +78,31 @@ class MidiTempoMap:
         edge cases: multiple points in same quant boundary
         points in adjacent quant boundaries
         """
-
+        tempo_quant = 4 / tempo_quant  # ugh
         ret = []
 
         for i, event in enumerate(tempo_automation_events):
+            if event.beat < 0:
+                ret.append(event)
+                continue
+                
             if is_aligned(event.beat, tempo_quant):
                 ret.append(event)
                 continue
+        
+            # print(1233, event)
 
             aligned_beat = aligned(event.beat, tempo_quant)
             next_aligned_beat = aligned_beat + tempo_quant
 
             quant_before_already_handled = ret and ret[-1].beat == aligned_beat
-            print(123, ret[-1].beat, aligned_beat)
             if not quant_before_already_handled:
                 # this branch is usually taken. it won't be taken if
                 # many points are grouped in same quant.
                 # append "before" aligned beat
+                if event.prev_aligned_bpm == None:
+                    print(event)
+                    # assert 0
                 ret.append(AlignedGenericTempoAutomationEvent(beat=aligned_beat, bpm=event.prev_aligned_bpm))
 
             # do we need to append the "after" one too?
@@ -126,6 +134,7 @@ class MidiTempoMap:
                 # the current quant has already been processed.
 
 
+        # print(111, ret)
         return ret
     
     def _render_map(self, tempo_automation_events, quant):
@@ -144,6 +153,9 @@ class MidiTempoMap:
 
         for i, event in enumerate(tempo_automation_events):
             curr_bpm = event.bpm
+            if curr_bpm is None:
+                print(event)
+                assert 0
             curr_beat = max(event.beat, 0)  # due to Ableton negative point
 
             if i == 0:

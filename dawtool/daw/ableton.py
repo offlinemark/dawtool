@@ -206,6 +206,7 @@ class AbletonProject(Project):
         self._parse_automation(self.contents)
 
         self._calc_markers()
+        self._calc_tempo_automation_event_real_times() # TODO: remove this - for now we need this because compute_tempo_map needs its analysis even in projects w/o markers
         self._compute_tempo_map()
 
     def _parse_version(self):
