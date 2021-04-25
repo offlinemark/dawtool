@@ -7,18 +7,22 @@ when doing time calculations.
 """
 
 from .marker import Marker
-from .tempomap import MidiTempoMap
 from .util import calc_time_elapsed_theoretical, spb, format_time
 from .util import linspace, power_of_two
 
 from dataclasses import dataclass
 
 @dataclass
-class GenericTempoAutomationEvent:
+class BasicGenericTempoAutomationEvent:
     beat: float
     bpm: float
+
+@dataclass
+class GenericTempoAutomationEvent(BasicGenericTempoAutomationEvent):
     real_time: float = 0.0
 
+# Requires GenericTempoAutomationEvent
+from .tempomap import MidiTempoMap
 
 from os.path import splitext
 
