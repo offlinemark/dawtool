@@ -2,6 +2,21 @@ from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 
 from io import BytesIO
 
+from dataclasses import dataclass
+
+
+# This is for testing. mido's MetaMessage's __repr__ isn't doesn't produce
+# python I can copy and paste to create integration tests, so here is a 
+# wrapper that does. We use this internally in the main tested function, then
+# convert to MetaMessage at the end.
+@dataclass
+class SetTempo:
+    tempo: int
+    time: int
+
+    def to_mido(self):
+        return MetaMessage('set_tempo', tempo=self.tempo, time=self.time)
+
 class MidiTempoMap:
     def __init__(self, project):
         self.project = project
@@ -20,7 +35,7 @@ class MidiTempoMap:
     def _generate_track(self, tempo_automation_events, tempo_quant):
         track = MidiTrack()
         track.append(Message('note_on', note=64, velocity=64, time=0))
-        track += self._render_map(tempo_automation_events, tempo_quant)
+        track += [x.to_mido() for x in self._render_map(tempo_automation_events, tempo_quant)]
         track.append(Message('note_off', note=64, velocity=127, time=32))
         return track
     
@@ -31,29 +46,29 @@ class MidiTempoMap:
             # if no tempo auto, our map is a single point at the start. we may encounter
             # that issue with live where it revert back to the original bpm with 1
             # point you need to click away.
-            messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
+            messages.append(SetTempo(bpm2tempo(self.project.beats_per_min), 0))
             # messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
             return messages
 
         for i, event in enumerate(tempo_automation_events):
             curr_bpm = event.bpm
-            curr_beat = event.beat if event.beat >= 0 else 0 # due to Ableton negative point
+            curr_beat = max(event.beat, 0)  # due to Ableton negative point
 
             if i == 0:
                 beats_elapsed = curr_beat 
                 time_elapsed_tick = self._beats2ticks(beats_elapsed)
-                messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
+                messages.append(SetTempo(bpm2tempo(curr_bpm), int(time_elapsed_tick)))
                 continue
 
             prev = tempo_automation_events[i-1]
-            beats_elapsed = curr_beat - prev.beat
+            beats_elapsed = curr_beat - max(prev.beat, 0)
             time_elapsed_tick = self._beats2ticks(beats_elapsed)
 
             if prev.bpm != curr_bpm and beats_elapsed:
                 messages += self._render_slope(curr_bpm, prev.bpm, beats_elapsed, quant)
             else:
                 # if we are on a horizontal line or vertical line
-                messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
+                messages.append(SetTempo(bpm2tempo(curr_bpm), int(time_elapsed_tick)))
         
         return messages
 
@@ -76,12 +91,12 @@ class MidiTempoMap:
             # for every segment, we emit a horizontal line and a vertical
             # line.
 
-            messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(bpm_accumulator), time=int(self._beats2ticks(beat_increment))))
+            messages.append(SetTempo(bpm2tempo(bpm_accumulator), int(self._beats2ticks(beat_increment))))
 
             # currx = i*beat_increment +beat_increment 
             # ydiff = slope * currx
             new_bpm = bpm_accumulator + bpm_increment 
-            messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(new_bpm), time=0))
+            messages.append(SetTempo(bpm2tempo(new_bpm), 0))
             bpm_accumulator = new_bpm
         
         return messages
