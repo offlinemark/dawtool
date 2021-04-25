@@ -16,8 +16,8 @@ from dataclasses import dataclass
 @dataclass
 class GenericTempoAutomationEvent:
     beat: float
-    real_time: float
     bpm: float
+    real_time: float = 0.0
 
 
 from os.path import splitext
@@ -252,7 +252,7 @@ class Project:
 
     def _calc_beat_real_time_from_events(self, beat, first, second):
         bpm = self._calc_bpm_at_beat(beat, first, second)
-        fake_event = GenericTempoAutomationEvent(beat, None, bpm)
+        fake_event = GenericTempoAutomationEvent(beat, bpm)
         final_real_time_diff = self._time_between_events(first, fake_event)
         # print('final real time diff', final_real_time_diff)
         return first.real_time + final_real_time_diff
