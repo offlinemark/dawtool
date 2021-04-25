@@ -9,19 +9,19 @@ class MidiTempoMap:
     def generate(self):
         tempo_map_bytes = BytesIO()
         mid = MidiFile()
-        track = self._generate_track(mid.ticks_per_beat)
+        track = self._generate_track(self.project.tempo_automation_events, self.project.TEMPO_QUANT, mid.ticks_per_beat)
         mid.tracks.append(track)
         mid.save(file=tempo_map_bytes)
         return tempo_map_bytes.getvalue()
     
-    def _generate_track(self, ticks_per_beat):
+    def _generate_track(self, tempo_automation_events, tempo_quant, ticks_per_beat):
         track = MidiTrack()
         track.append(Message('note_on', note=64, velocity=64, time=0))
-        track += self._render_map(self.project.tempo_automation_events, ticks_per_beat, self.project.TEMPO_QUANT)
+        track += self._render_map(tempo_automation_events, tempo_quant, ticks_per_beat)
         track.append(Message('note_off', note=64, velocity=127, time=32))
         return track
     
-    def _render_map(self, tempo_automation_events, ticks_per_beat, quant):
+    def _render_map(self, tempo_automation_events, quant, ticks_per_beat):
         messages = []
         
         # untested:
