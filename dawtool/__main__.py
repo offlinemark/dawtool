@@ -1,5 +1,5 @@
 import dawtool
-from dawtool import extract_markers, format_time, load_project, emit_midi_tempo_map
+from dawtool import extract_markers, format_time, load_project
 from dawtool.project import UnknownExtension
 
 import sys
