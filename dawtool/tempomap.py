@@ -3,10 +3,8 @@ from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from io import BytesIO
 
 class MidiTempoMap:
-    def __init__(self, project, tempo_automation_events, tempo_quant):
+    def __init__(self, project):
         self.project = project
-        self.tempo_automation_events = tempo_automation_events
-        self.tempo_quant = tempo_quant
 
     def generate(self):
         tempo_map_bytes = BytesIO()
@@ -19,7 +17,7 @@ class MidiTempoMap:
     def _generate_track(self, ticks_per_beat):
         track = MidiTrack()
         track.append(Message('note_on', note=64, velocity=64, time=0))
-        track += self._render_map(self.tempo_automation_events, ticks_per_beat, self.tempo_quant)
+        track += self._render_map(self.project.tempo_automation_events, ticks_per_beat, self.project.TEMPO_QUANT)
         track.append(Message('note_off', note=64, velocity=127, time=32))
         return track
     

@@ -95,7 +95,7 @@ class Project:
         but we'd like to allow users to compute only the tempo map without
         markers if they choose.
         """
-        tempo_map = MidiTempoMap(self, self.tempo_automation_events, self.TEMPO_QUANT)
+        tempo_map = MidiTempoMap(self)
         self.tempo_map = tempo_map.generate()
 
     #
