@@ -19,23 +19,20 @@ class MidiTempoMap:
     def _generate_track(self, ticks_per_beat):
         track = MidiTrack()
         track.append(Message('note_on', note=64, velocity=64, time=0))
-        self._render_map(track, self.tempo_automation_events, ticks_per_beat, self.tempo_quant)
+        track += self._render_map(self.tempo_automation_events, ticks_per_beat, self.tempo_quant)
         track.append(Message('note_off', note=64, velocity=127, time=32))
         return track
     
-    def _render_map(self, track, tempo_automation_events, ticks_per_beat, quant):
-        # if tempo_automation_events[0].beat < 0:
-        #     tempo_automation_events[0].beat = 0
-
-        # TODO: don't use track, ret a list
+    def _render_map(self, tempo_automation_events, ticks_per_beat, quant):
+        messages = []
         
         # untested:
         if tempo_automation_events is None:
             # if no tempo auto, our map is a single point at the start. we may encounter
             # that issue with live where it revert back to the original bpm with 1
             # point you need to click away.
-            track.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
-            return
+            messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(self.project.beats_per_min), time=0))
+            return messages
 
         for i, event in enumerate(tempo_automation_events):
             curr_bpm = event.bpm
@@ -44,7 +41,7 @@ class MidiTempoMap:
             if i == 0:
                 beats_elapsed = curr_beat 
                 time_elapsed_tick = beats_elapsed * ticks_per_beat
-                track.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
+                messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
                 continue
 
             prev = tempo_automation_events[i-1]
@@ -72,13 +69,15 @@ class MidiTempoMap:
                     # line.
 
                     # print(11, int(beat_increment*mid.ticks_per_beat))
-                    track.append(MetaMessage('set_tempo', tempo=bpm2tempo(bpm_accumulator), time=int(beat_increment*ticks_per_beat)))
+                    messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(bpm_accumulator), time=int(beat_increment*ticks_per_beat)))
 
                     # currx = i*beat_increment +beat_increment 
                     # ydiff = slope * currx
                     new_bpm = bpm_accumulator + bpm_increment 
-                    track.append(MetaMessage('set_tempo', tempo=bpm2tempo(new_bpm), time=0))
+                    messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(new_bpm), time=0))
                     bpm_accumulator = new_bpm
             else:
                 # if we are on a horizontal line or vertical line
-                track.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
+                messages.append(MetaMessage('set_tempo', tempo=bpm2tempo(curr_bpm), time=int(time_elapsed_tick)))
+        
+        return messages
