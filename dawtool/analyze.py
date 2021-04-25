@@ -24,6 +24,17 @@ def extract_markers(filename, stream, *args, **kwargs):
     # proj.dump()
     return proj.markers
 
+def export_tempo_map(filename, stream, midi_filename, *args, **kwargs):
+    """
+    
+    raises FileNotFoundError
+    raises ValueError
+
+    return: list of Marker sorted based on the Marker.time
+    """
+    proj = load_project(filename, stream, *args, **kwargs)
+    proj.parse()
+    return proj.tempo_map
 
 def emit_midi_tempo_map(filename, tempo_automation_events, quant):
     data = [(100, 1), (60, 2), (80, 3.5)]
