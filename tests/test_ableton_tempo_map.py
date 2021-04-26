@@ -1,16 +1,24 @@
 from dawtool import load_project
-from dawtool.tempomap import MidiTempoMap, SetTempo
-# from dawtool.daw.ableton import TempoAutomationFloatEvent, AbletonSetVersion, AbletonProject
-# from dawtool.marker import Marker
-# from dawtool.project import UnknownExtension
+from dawtool.project import BasicGenericTempoAutomationEvent
+from dawtool.tempomap import MidiTempoMap, SetTempo 
+from dawtool.tempomap import AlignedGenericTempoAutomationEvent as AlignedEvent
 
 import pytest
 
 import os
+from dataclasses import dataclass
 # from io import BytesIO
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 TESTS_DIR_ALS = os.path.join(TESTS_DIR, 'als')
+
+ABL_TEMPO_QUANT = 16
+
+@dataclass
+class GenericTempoAutomationEventWithPrev(BasicGenericTempoAutomationEvent):
+    prev_aligned_bpm: float = -1.0
+
+Event = GenericTempoAutomationEventWithPrev
 
 def test_no_tempo_auto():
     fname = f'{TESTS_DIR_ALS}/example-120.als'
@@ -51,3 +59,106 @@ def test_intense_aligned_tempo_auto():
 
 def test_unaligned_tempo_auto():
     pass
+
+
+
+
+
+
+def test_transform_single_unaligned():
+    events = [
+        Event(beat=0, bpm=60),
+        Event(beat=.3, bpm=54, prev_aligned_bpm=55),
+        Event(beat=.75, bpm=70),
+    ]
+
+    expected = [
+        Event(beat=0, bpm=60),
+        AlignedEvent(beat=.25, bpm=55),
+        AlignedEvent(beat=.5, bpm=61.111111111111114),
+        Event(beat=.75, bpm=70),
+    ]
+
+    aligned = MidiTempoMap._compute_aligned_points(events, ABL_TEMPO_QUANT)
+    assert expected == aligned
+
+def test_transform_multiple_not_adjacent_unaligned_and_NOT_aligned_at_end():
+    events = [
+        Event(beat=0, bpm=60),
+        Event(beat=.3, bpm=54, prev_aligned_bpm=55),
+        Event(beat=.81, bpm=59.4, prev_aligned_bpm=57),
+    ]
+
+    expected = [
+        Event(beat=0, bpm=60),
+        AlignedEvent(beat=.25, bpm=55),
+        AlignedEvent(beat=.5, bpm=56.11764705882353),
+        AlignedEvent(beat=.75, bpm=57),
+    ]
+
+    aligned = MidiTempoMap._compute_aligned_points(events, ABL_TEMPO_QUANT)
+    assert expected == aligned
+
+def test_transform_multiple_not_adjacent_unaligned_and_aligned_at_end():
+    events = [
+        Event(beat=0, bpm=60),
+        Event(beat=.3, bpm=54, prev_aligned_bpm=55),
+        Event(beat=.81, bpm=59.4, prev_aligned_bpm=57),
+        Event(beat=1, bpm=61),
+    ]
+
+    expected = [
+        Event(beat=0, bpm=60),
+        AlignedEvent(beat=.25, bpm=55),
+        AlignedEvent(beat=.5, bpm=56.11764705882353),
+        AlignedEvent(beat=.75, bpm=57),
+        Event(beat=1, bpm=61),
+    ]
+
+    aligned = MidiTempoMap._compute_aligned_points(events, ABL_TEMPO_QUANT)
+    assert expected == aligned
+
+def test_transform_multiple_adjacent_unaligned():
+    events = [
+        Event(beat=0, bpm=60),
+        Event(beat=.3, bpm=54, prev_aligned_bpm=55),
+        Event(beat=.6, bpm=56, prev_aligned_bpm=55.333333333333336),
+        Event(beat=.8, bpm=63, prev_aligned_bpm=61.25),
+    ]
+
+    expected = [
+        Event(beat=0, bpm=60),
+        AlignedEvent(beat=.25, bpm=55),
+        AlignedEvent(beat=.5, bpm=55.333333333333336),
+        AlignedEvent(beat=.75, bpm=61.25)
+    ]
+
+    aligned = MidiTempoMap._compute_aligned_points(events, ABL_TEMPO_QUANT)
+    assert expected == aligned
+
+def test_transform_multiple_unaligned_in_same_quant():
+    """
+    If multiple points in same quant, points after the first get ignored,
+    except for the last, which is used in computing the tail end point.
+    """
+    events = [
+        Event(beat=0, bpm=60),
+
+        Event(beat=.3, bpm=54, prev_aligned_bpm=55),
+        Event(beat=.33, bpm=58),
+        Event(beat=.39, bpm=43),
+
+        Event(beat=.75, bpm=61),
+    ]
+
+    expected = [
+        Event(beat=0, bpm=60),
+
+        AlignedEvent(beat=.25, bpm=55),
+        AlignedEvent(beat=.5, bpm=48.5),
+
+        Event(beat=.75, bpm=61),
+    ]
+
+    aligned = MidiTempoMap._compute_aligned_points(events, ABL_TEMPO_QUANT)
+    assert expected == aligned
