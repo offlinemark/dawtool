@@ -95,7 +95,7 @@ pip install git+https://github.com/offlinemark/dawtool
 ## Status
 
 dawtool is production ready. A [hosted version](https://timestamps.me)
-has processed 700+ project files since March 2020.
+has processed 3000+ project files since March 2020.
 
 Both the API and CLI should be considered unstable and
 subject to change.
