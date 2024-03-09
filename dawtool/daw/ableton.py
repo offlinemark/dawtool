@@ -283,9 +283,12 @@ class AbletonProject(Project):
         if self.version.minorA < 10:
             events = self._parse_arranger_automation_events(contents)
         else:
-            # TODO: need better code structure to manage diff Ableton version
-            # This only applies to Ableton 10
-            master_track_chunk = self._find_tag(contents, 'MasterTrack')
+            if self.version.minorA in [10,11]:
+                # This only applies to Ableton 10 and 11
+                master_track_chunk = self._find_tag(contents, 'MasterTrack')
+            else:
+                # This only applies to Ableton 12
+                master_track_chunk = self._find_tag(contents, 'MainTrack')
             try:
                 master_track = ET.fromstring(master_track_chunk)
             except ParseError:
