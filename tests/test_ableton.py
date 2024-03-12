@@ -78,9 +78,34 @@ def test_als_automation_theo():
     assert proj.tempo_automation_events == auto
     assert proj.markers == marks
 
+def test_als_automation_theo_l12():
+    fname = f'{TESTS_DIR_ALS}/L12-automation.als'
+    with open(fname, 'rb') as f:
+        proj = load_project(fname, f, theoretical=True)
+
+    proj.parse()
+
+    auto = [TempoAutomationFloatEvent(id='92', time=-63072000.0, real_time=0.0, value=60.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=None), TempoAutomationFloatEvent(id='290', time=4.0, real_time=4.0, value=60.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=None), TempoAutomationFloatEvent(id='291', time=8.0, real_time=6.772588722239782, value=120.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=None), TempoAutomationFloatEvent(id='596', time=12.0, real_time=8.305065593537753, value=200.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=None)]
+    marks = [Marker(time=0.0, text='A'), Marker(time=4.0, text='B'), Marker(time=5.6218604324326575, text='D'), Marker(time=6.772588722239782, text='C'), Marker(time=7.635634939595124, text='Z'), Marker(time=8.905065593537753, text='E')]
+
+    assert proj.tempo_automation_events == auto
+    assert proj.markers == marks
+
 def test_als_auto_unaligned_daw():
     'als with many points, fairly steep slopes, and points unaligned on 16th notes'
     fname = f'{TESTS_DIR_ALS}/automation-intense-unaligned.als'
+    with open(fname, 'rb') as f:
+        proj = load_project(fname, f, theoretical=False)
+
+    proj.parse()
+    print(proj.tempo_automation_events)
+    auto = [TempoAutomationFloatEvent(id='598', time=-63072000.0, real_time=0.0, value=120.760574, curve_control1=None, curve_control2=None, prev_aligned_bpm=None), TempoAutomationFloatEvent(id='649', time=1.8125, real_time=0.9005422581048679, value=120.760574, curve_control1=None, curve_control2=None, prev_aligned_bpm=120.760574), TempoAutomationFloatEvent(id='667', time=4.0625, real_time=2.3966117557062345, value=60.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=61.687793722222224), TempoAutomationFloatEvent(id='669', time=4.093925345487846, real_time=2.427177295750691, value=80.6271286, curve_control1=None, curve_control2=None, prev_aligned_bpm=61.687793722222224), TempoAutomationFloatEvent(id='670', time=4.1484021187146185, real_time=2.480163570609616, value=34.5163536, curve_control1=None, curve_control2=None, prev_aligned_bpm=61.687793722222224), TempoAutomationFloatEvent(id='671', time=4.178364343989344, real_time=2.5093060217820256, value=95.9973831, curve_control1=None, curve_control2=None, prev_aligned_bpm=61.687793722222224), TempoAutomationFloatEvent(id='668', time=4.25, real_time=2.578981708028704, value=58.0627136, curve_control1=None, curve_control2=None, prev_aligned_bpm=61.687793722222224), TempoAutomationFloatEvent(id='672', time=4.457870775058275, real_time=2.7937881772788167, value=55.9149513, curve_control1=None, curve_control2=None, prev_aligned_bpm=58.0627136), TempoAutomationFloatEvent(id='712', time=4.548306901431902, real_time=2.8828996005984946, value=72.4000015, curve_control1=None, curve_control2=None, prev_aligned_bpm=63.594430905110116), TempoAutomationFloatEvent(id='700', time=4.80127970987346, real_time=3.113221253516874, value=78.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=76.86483333864655), TempoAutomationFloatEvent(id='600', time=5.0, real_time=3.268340530951092, value=50.3135643, curve_control1=None, curve_control2=None, prev_aligned_bpm=76.86483333864655), TempoAutomationFloatEvent(id='599', time=6.5, real_time=4.455212285145871, value=125.883995, curve_control1=None, curve_control2=None, prev_aligned_bpm=50.3135643), TempoAutomationFloatEvent(id='601', time=7.25, real_time=4.946994580622144, value=40.0667267, curve_control1=None, curve_control2=None, prev_aligned_bpm=125.883995), TempoAutomationFloatEvent(id='291', time=8.0, real_time=5.706896019728953, value=120.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=40.0667267), TempoAutomationFloatEvent(id='602', time=8.5, real_time=5.9305966531965275, value=183.949417, curve_control1=None, curve_control2=None, prev_aligned_bpm=120.0), TempoAutomationFloatEvent(id='603', time=9.5, real_time=6.410345802117857, value=54.1561279, curve_control1=None, curve_control2=None, prev_aligned_bpm=183.949417), TempoAutomationFloatEvent(id='596', time=12.0, real_time=7.860727189077446, value=200.0, curve_control1=None, curve_control2=None, prev_aligned_bpm=54.1561279), TempoAutomationFloatEvent(id='604', time=13.0, real_time=8.27541854608016, value=74.6498032, curve_control1=None, curve_control2=None, prev_aligned_bpm=200.0), TempoAutomationFloatEvent(id='605', time=15.25, real_time=9.587704231552863, value=147.658524, curve_control1=None, curve_control2=None, prev_aligned_bpm=74.6498032)]
+    assert proj.tempo_automation_events == auto
+    assert proj.markers == [Marker(time=0.0, text='A'), Marker(time=0.7452763515350631, text='X'), Marker(time=2.335821771598745, text='B'), Marker(time=4.173841066076857, text='D'), Marker(time=5.706896019728953, text='C'), Marker(time=6.905534691333889, text='Z'), Marker(time=7.692021891450212, text='1'), Marker(time=8.974199935476374, text='E'), Marker(time=10.705147339679828, text='YY')]
+
+def test_als_auto_unaligned_daw_l12():
+    'als with many points, fairly steep slopes, and points unaligned on 16th notes'
+    fname = f'{TESTS_DIR_ALS}/L12-automation-intense-unaligned.als'
     with open(fname, 'rb') as f:
         proj = load_project(fname, f, theoretical=False)
 
