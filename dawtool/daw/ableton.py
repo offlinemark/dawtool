@@ -304,10 +304,8 @@ class AbletonProject(Project):
         """
         Needs to be called after _parse_tempo
         """
-
         events = None
 
-        # Ableton 8, 9 store tempo auto differently
         if self.version.minorA < 10:
             events = self._parse_events_from_arranger_automation(contents)
         else:
