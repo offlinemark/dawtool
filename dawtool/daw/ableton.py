@@ -272,13 +272,8 @@ class AbletonProject(Project):
         events = arranger_auto.find('Events')
         return events
 
-    def _parse_events_from_main_track(self, contents):
-        if self.version.minorA in [10,11]:
-            # This only applies to Ableton 10 and 11
-            master_track_chunk = self._find_tag(contents, 'MasterTrack')
-        else:
-            # This only applies to Ableton 12
-            master_track_chunk = self._find_tag(contents, 'MainTrack')
+    def _parse_events_from_main_track(self, contents, main_track_name):
+        master_track_chunk = self._find_tag(contents, main_track_name)
 
         try:
             master_track = ET.fromstring(master_track_chunk)
@@ -316,7 +311,8 @@ class AbletonProject(Project):
         if self.version.minorA < 10:
             events = self._parse_events_from_arranger_automation(contents)
         else:
-            events = self._parse_events_from_main_track(contents)
+            main_track_name = 'MasterTrack' if self.version.minorA in (10, 11) else 'MainTrack'
+            events = self._parse_events_from_main_track(contents, main_track_name)
 
         if events is None:
             return
