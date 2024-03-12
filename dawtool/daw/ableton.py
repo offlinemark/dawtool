@@ -254,7 +254,7 @@ class AbletonProject(Project):
         return self.tempo_automation_events is None or \
                 len(self.tempo_automation_events) == 1
 
-    def _parse_arranger_automation_events(self, contents):
+    def _parse_events_from_arranger_automation(self, contents):
         """
         Only for Ableton 8 and 9.
         """
@@ -272,44 +272,45 @@ class AbletonProject(Project):
         events = arranger_auto.find('Events')
         return events
 
+    def _parse_events_from_main_track(self, contents, main_track_name):
+        master_track_chunk = self._find_tag(contents, main_track_name)
+
+        try:
+            master_track = ET.fromstring(master_track_chunk)
+        except ParseError:
+            raise ValueError('Cannot parse automation')
+
+        auto_envelopes = master_track.find('AutomationEnvelopes')
+        if auto_envelopes is None:
+            logger.warning('%s: No AutomationEnvelopes found in MasterTrack', self.filename)
+            return None
+
+        envelopes = auto_envelopes.find('Envelopes')
+        if envelopes is None:
+            logger.warning('%s: No found in MasterTrack', self.filename)
+            return None
+
+        events = None
+
+        for env in envelopes:
+            pointee_id = env.find('EnvelopeTarget').find('PointeeId').get('Value')
+            if pointee_id == self.tempo_automation_target_id:
+                events = env.find('Automation').find('Events')
+                break
+
+        return events
+
     def _parse_automation(self, contents):
         """
         Needs to be called after _parse_tempo
         """
-
         events = None
 
-        # Ableton 8, 9 store tempo auto differently
         if self.version.minorA < 10:
-            events = self._parse_arranger_automation_events(contents)
+            events = self._parse_events_from_arranger_automation(contents)
         else:
-            if self.version.minorA in [10,11]:
-                # This only applies to Ableton 10 and 11
-                master_track_chunk = self._find_tag(contents, 'MasterTrack')
-            else:
-                # This only applies to Ableton 12
-                master_track_chunk = self._find_tag(contents, 'MainTrack')
-            try:
-                master_track = ET.fromstring(master_track_chunk)
-            except ParseError:
-                raise ValueError('Cannot parse automation')
-
-            auto_envelopes = master_track.find('AutomationEnvelopes')
-            if auto_envelopes is None:
-                logger.warning('%s: No AutomationEnvelopes found in MasterTrack', self.filename)
-                return
-
-            envelopes = auto_envelopes.find('Envelopes')
-            if envelopes is None:
-                logger.warning('%s: No found in MasterTrack', self.filename)
-                return
-
-            # events = None
-            for env in envelopes:
-                pointee_id = env.find('EnvelopeTarget').find('PointeeId').get('Value')
-                if pointee_id == self.tempo_automation_target_id:
-                    events = env.find('Automation').find('Events')
-                    break
+            main_track_name = 'MasterTrack' if self.version.minorA in (10, 11) else 'MainTrack'
+            events = self._parse_events_from_main_track(contents, main_track_name)
 
         if events is None:
             return
@@ -318,7 +319,7 @@ class AbletonProject(Project):
 
     def _parse_tempo(self, contents):
         if self.version.minorA == 8:
-            events = self._parse_arranger_automation_events(contents)
+            events = self._parse_events_from_arranger_automation(contents)
             if not events:
                 # there should always be at least 1 event in general, and especially
                 # for Ableton 8.
