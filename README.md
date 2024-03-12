@@ -9,7 +9,7 @@ It provides a high accuracy implementation of **time marker extraction**,
 including support for projects with tempo automation. 
 
 Supported formats:
-- Ableton Live set (.als) [v8-10]
+- Ableton Live set (.als) [v8-12]
 - FL Studio project (.flp) [v10-11, 20]
 - Cue sheet (.cue)
 
