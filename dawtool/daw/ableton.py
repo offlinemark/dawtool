@@ -254,7 +254,7 @@ class AbletonProject(Project):
         return self.tempo_automation_events is None or \
                 len(self.tempo_automation_events) == 1
 
-    def _parse_arranger_automation_events(self, contents):
+    def _parse_events_from_arranger_automation(self, contents):
         """
         Only for Ableton 8 and 9.
         """
@@ -281,7 +281,7 @@ class AbletonProject(Project):
 
         # Ableton 8, 9 store tempo auto differently
         if self.version.minorA < 10:
-            events = self._parse_arranger_automation_events(contents)
+            events = self._parse_events_from_arranger_automation(contents)
         else:
             if self.version.minorA in [10,11]:
                 # This only applies to Ableton 10 and 11
@@ -318,7 +318,7 @@ class AbletonProject(Project):
 
     def _parse_tempo(self, contents):
         if self.version.minorA == 8:
-            events = self._parse_arranger_automation_events(contents)
+            events = self._parse_events_from_arranger_automation(contents)
             if not events:
                 # there should always be at least 1 event in general, and especially
                 # for Ableton 8.
