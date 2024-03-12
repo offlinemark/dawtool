@@ -272,6 +272,39 @@ class AbletonProject(Project):
         events = arranger_auto.find('Events')
         return events
 
+    def _parse_events_from_main_track(self, contents):
+        if self.version.minorA in [10,11]:
+            # This only applies to Ableton 10 and 11
+            master_track_chunk = self._find_tag(contents, 'MasterTrack')
+        else:
+            # This only applies to Ableton 12
+            master_track_chunk = self._find_tag(contents, 'MainTrack')
+
+        try:
+            master_track = ET.fromstring(master_track_chunk)
+        except ParseError:
+            raise ValueError('Cannot parse automation')
+
+        auto_envelopes = master_track.find('AutomationEnvelopes')
+        if auto_envelopes is None:
+            logger.warning('%s: No AutomationEnvelopes found in MasterTrack', self.filename)
+            return None
+
+        envelopes = auto_envelopes.find('Envelopes')
+        if envelopes is None:
+            logger.warning('%s: No found in MasterTrack', self.filename)
+            return None
+
+        events = None
+
+        for env in envelopes:
+            pointee_id = env.find('EnvelopeTarget').find('PointeeId').get('Value')
+            if pointee_id == self.tempo_automation_target_id:
+                events = env.find('Automation').find('Events')
+                break
+
+        return events
+
     def _parse_automation(self, contents):
         """
         Needs to be called after _parse_tempo
@@ -283,33 +316,7 @@ class AbletonProject(Project):
         if self.version.minorA < 10:
             events = self._parse_events_from_arranger_automation(contents)
         else:
-            if self.version.minorA in [10,11]:
-                # This only applies to Ableton 10 and 11
-                master_track_chunk = self._find_tag(contents, 'MasterTrack')
-            else:
-                # This only applies to Ableton 12
-                master_track_chunk = self._find_tag(contents, 'MainTrack')
-            try:
-                master_track = ET.fromstring(master_track_chunk)
-            except ParseError:
-                raise ValueError('Cannot parse automation')
-
-            auto_envelopes = master_track.find('AutomationEnvelopes')
-            if auto_envelopes is None:
-                logger.warning('%s: No AutomationEnvelopes found in MasterTrack', self.filename)
-                return
-
-            envelopes = auto_envelopes.find('Envelopes')
-            if envelopes is None:
-                logger.warning('%s: No found in MasterTrack', self.filename)
-                return
-
-            # events = None
-            for env in envelopes:
-                pointee_id = env.find('EnvelopeTarget').find('PointeeId').get('Value')
-                if pointee_id == self.tempo_automation_target_id:
-                    events = env.find('Automation').find('Events')
-                    break
+            events = self._parse_events_from_main_track(contents)
 
         if events is None:
             return
