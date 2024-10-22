@@ -242,6 +242,10 @@ def test_tag_existing_locators():
     proj._parse_markers(als)
     assert(proj.raw_markers == [AbletonRawMarker(time=0.0, text='Locator Text')])
 
+def test_tag_xml_attrs():
+    als = b'<Tag attrA=1 attrB=2></Tag>'
+    ret = AbletonProject._find_tag(als, 'Tag')
+    assert(ret == als)
 
 def test_tag_empty_locators():
     als = b'<Locators><Locators /></Locators>'
