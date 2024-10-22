@@ -169,7 +169,7 @@ class AbletonProject(Project):
 
     @staticmethod
     def _find_tag(contents, tag, start=None):
-        start_tag = f"<{tag}>".encode()
+        start_tag = f"<{tag}".encode()
         end_tag = f"</{tag}>".encode()
 
         start_idx = contents.find(start_tag, start)
@@ -188,6 +188,8 @@ class AbletonProject(Project):
         # tag.
         outer_chunk = self._find_tag(contents, self.LOCATORS_TAG)
         inner_chunk = self._find_tag(outer_chunk[1:], self.LOCATORS_TAG)
+        if inner_chunk.startswith(b'<Locators />'):
+            return b''
         return inner_chunk
 
     def parse(self):
