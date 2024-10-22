@@ -173,8 +173,12 @@ class AbletonProject(Project):
         end_tag = f"</{tag}>".encode()
 
         start_idx = contents.find(start_tag, start)
-        # TODO: what if not found?
+        if start_idx == -1:
+            return b''
+
         end_idx = contents.find(end_tag, start_idx)
+        if end_idx == -1:
+            return b''
 
         return contents[start_idx:end_idx+len(end_tag)]
 
