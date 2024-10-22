@@ -145,7 +145,7 @@ class AbletonProject(Project):
     LOCATORS_TAG = 'Locators'
     TEMPO_TAG = 'Tempo'
 
-    def __init__(self, filename, stream, *args, **kwargs):
+    def __init__(self, filename, stream, require_gzip=True, *args, **kwargs):
         super().__init__(filename, stream, *args, **kwargs)
         # TODO: add underscores for priv
         self.beats_per_min = None
@@ -154,6 +154,7 @@ class AbletonProject(Project):
         self.tempo_automation_events = None  # sorted by beat num
         self.raw_contents = stream.read()
         self.contents = b''
+        self.require_gzip = require_gzip
 
     @property
     def has_tempo_automation(self):
@@ -193,7 +194,10 @@ class AbletonProject(Project):
         try:
             self.contents = gzip.decompress(self.raw_contents)
         except OSError as e:
-            raise ValueError('Not gzip', len(self.raw_contents), self.raw_contents[:30]) from None
+            if self.require_gzip:
+                raise ValueError('Not gzip', len(self.raw_contents), self.raw_contents[:30]) from None
+            else:
+                self.contents = self.raw_contents
 
         if not self.contents:
             raise ValueError('Empty contents')
