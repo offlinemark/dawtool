@@ -145,7 +145,7 @@ class AbletonProject(Project):
     LOCATORS_TAG = 'Locators'
     TEMPO_TAG = 'Tempo'
 
-    def __init__(self, filename, stream, *args, **kwargs):
+    def __init__(self, filename, stream, require_gzip=True, *args, **kwargs):
         super().__init__(filename, stream, *args, **kwargs)
         # TODO: add underscores for priv
         self.beats_per_min = None
@@ -154,6 +154,7 @@ class AbletonProject(Project):
         self.tempo_automation_events = None  # sorted by beat num
         self.raw_contents = stream.read()
         self.contents = b''
+        self.require_gzip = require_gzip
 
     @property
     def has_tempo_automation(self):
@@ -168,12 +169,16 @@ class AbletonProject(Project):
 
     @staticmethod
     def _find_tag(contents, tag, start=None):
-        start_tag = f"<{tag}>".encode()
+        start_tag = f"<{tag}".encode()
         end_tag = f"</{tag}>".encode()
 
         start_idx = contents.find(start_tag, start)
-        # TODO: what if not found?
+        if start_idx == -1:
+            return b''
+
         end_idx = contents.find(end_tag, start_idx)
+        if end_idx == -1:
+            return b''
 
         return contents[start_idx:end_idx+len(end_tag)]
 
@@ -187,13 +192,18 @@ class AbletonProject(Project):
         # tag.
         outer_chunk = self._find_tag(contents, self.LOCATORS_TAG)
         inner_chunk = self._find_tag(outer_chunk[1:], self.LOCATORS_TAG)
+        if inner_chunk.startswith(b'<Locators />'):
+            return b''
         return inner_chunk
 
     def parse(self):
         try:
             self.contents = gzip.decompress(self.raw_contents)
         except OSError as e:
-            raise ValueError('Not gzip', len(self.raw_contents), self.raw_contents[:30]) from None
+            if self.require_gzip:
+                raise ValueError('Not gzip', len(self.raw_contents), self.raw_contents[:30]) from None
+            else:
+                self.contents = self.raw_contents
 
         if not self.contents:
             raise ValueError('Empty contents')

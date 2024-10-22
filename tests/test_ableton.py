@@ -13,7 +13,7 @@ TODO: use pytest approx() for all these floating point comparisons!
 """
 
 from dawtool import extract_markers, format_time, load_project
-from dawtool.daw.ableton import TempoAutomationFloatEvent, AbletonSetVersion, AbletonProject
+from dawtool.daw.ableton import TempoAutomationFloatEvent, AbletonSetVersion, AbletonProject, AbletonRawMarker
 from dawtool.marker import Marker
 from dawtool.project import UnknownExtension
 
@@ -222,6 +222,31 @@ def test_als9_auto():
 #
 # Unit tests
 #
+
+def test_tag_existing_locators():
+    als = b'''
+    <Locators>
+        <Locators>
+                <Locator Id="0">
+                        <LomId Value="0" />
+                        <Time Value="0" />
+                        <Name Value="Locator Text" />
+                        <Annotation Value="" />
+                        <IsSongStart Value="false" />
+                </Locator>
+        </Locators>
+    </Locators>
+    '''
+
+    proj = AbletonProject('test.als', BytesIO(), require_gzip=False)
+    proj._parse_markers(als)
+    assert(proj.raw_markers == [AbletonRawMarker(time=0.0, text='Locator Text')])
+
+
+def test_tag_empty_locators():
+    als = b'<Locators><Locators /></Locators>'
+    proj = AbletonProject('test.als', BytesIO(), require_gzip=False)
+    proj._parse_markers(als)
 
 def test_als_malformed_master():
     p = AbletonProject('f', BytesIO())
