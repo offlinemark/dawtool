@@ -252,6 +252,11 @@ def test_tag_empty_locators():
     proj = AbletonProject('test.als', BytesIO(), require_gzip=False)
     proj._parse_markers(als)
 
+def test_tag_empty_locators_Live10():
+    als = b'<Locators><Locators/></Locators>'
+    proj = AbletonProject('test.als', BytesIO(), require_gzip=False)
+    proj._parse_markers(als)
+
 def test_als_malformed_master():
     p = AbletonProject('f', BytesIO())
     p.version = AbletonSetVersion(None, None, 10, None, None, None, None, None)

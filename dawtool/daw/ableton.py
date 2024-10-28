@@ -186,13 +186,14 @@ class AbletonProject(Project):
         """
         returns empty bytes if no locators
         """
-        # For some reason inside the first Locators tag, there is another
-        # identical Locators tag. However, if there are no locators, inside
-        # the first Locators tags there is simple another *closing* Locators
-        # tag.
+        # If there are locators, then there is an outer pair of Locators tags, and an
+        # inner pair that wraps that actual Locators elements.
+        # If there are no locators, then there is the outer pair of tags, and a
+        # `<Locators/>` inside.
         outer_chunk = self._find_tag(contents, self.LOCATORS_TAG)
         inner_chunk = self._find_tag(outer_chunk[1:], self.LOCATORS_TAG)
-        if inner_chunk.startswith(b'<Locators />'):
+        # The latter was observed in Live10. This could be improved, but it works for now.
+        if inner_chunk.startswith(b'<Locators />') or inner_chunk.startswith(b'<Locators/>'):
             return b''
         return inner_chunk
 
